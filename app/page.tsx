@@ -3,14 +3,17 @@ import { UserCard } from '@/components/UserCard';
 import { CodeBlock } from '@/components/CodeBlock';
 import { User } from '@/types';
 
+// Configure the page for dynamic rendering
+export const dynamic = 'force-dynamic';
+
 // This is a Server Component, so we can fetch data directly on the server during the render process.
 async function getUsers(): Promise<User[]> {
   // For server components, we can use relative URLs which work automatically in both dev and production
   // Next.js will automatically resolve the correct base URL for the current environment
   const res = await fetch('/api/users', {
-    // We disable caching for this fetch request to ensure we always get fresh data on each page load,
-    // which is useful for demonstrating the live API endpoint.
-    cache: 'no-store',
+    // Use a reasonable cache time for production while still allowing fresh data
+    // This prevents the dynamic server usage error in production builds
+    next: { revalidate: 60 }, // Revalidate every 60 seconds
   });
 
   if (!res.ok) {
