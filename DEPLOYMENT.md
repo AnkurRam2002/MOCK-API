@@ -5,10 +5,11 @@
 The main issue was that the app was trying to fetch data from `http://localhost:3000` in production, which doesn't exist.
 
 ### What was fixed:
-1. **URL Resolution**: Changed from hardcoded localhost URL to relative URL (`/api/users`) which works in both development and production
+1. **URL Resolution**: Implemented robust URL detection that works across all deployment platforms (Vercel, Netlify, etc.)
 2. **Error Handling**: Improved error messages to show more helpful debugging information
 3. **Server Component**: The app now properly uses Next.js server components for data fetching
 4. **Dynamic Server Usage**: Fixed the "Dynamic server usage: no-store fetch" error by using proper caching strategy and force-dynamic configuration
+5. **CORS Configuration**: Added CORS headers in `next.config.mjs` for cross-origin requests
 
 ### Deployment Steps:
 
@@ -28,7 +29,13 @@ The main issue was that the app was trying to fetch data from `http://localhost:
 3. Make sure Node.js is available on your hosting platform
 
 ### Environment Variables (Optional):
-If you need to set a custom base URL, create a `.env.local` file:
+The app automatically detects the correct URL for different deployment platforms:
+
+- **Vercel**: Uses `VERCEL_URL` environment variable (automatically provided)
+- **Other platforms**: Set `NEXT_PUBLIC_APP_URL` in your environment variables
+- **Development**: Falls back to `http://localhost:3000`
+
+For custom deployments, you can set:
 ```
 NEXT_PUBLIC_APP_URL=https://your-app-domain.com
 ```

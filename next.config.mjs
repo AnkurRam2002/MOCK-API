@@ -8,7 +8,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
-            value: '*', // Allow all origins (update for production)
+            value: 'https://mock-415ut3o2w-ankurram2002s-projects.vercel.app', // Allow all origins (update for production)
           },
           {
             key: 'Access-Control-Allow-Methods',
