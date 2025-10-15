@@ -5,10 +5,9 @@ import { User } from '@/types';
 
 // This is a Server Component, so we can fetch data directly on the server during the render process.
 async function getUsers(): Promise<User[]> {
-  // Use the full URL, which is more robust. In a real production app,
-  // this URL would come from an environment variable.
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  const res = await fetch(`${baseUrl}/api/users`, {
+  // For server components, we can use relative URLs which work automatically in both dev and production
+  // Next.js will automatically resolve the correct base URL for the current environment
+  const res = await fetch('/api/users', {
     // We disable caching for this fetch request to ensure we always get fresh data on each page load,
     // which is useful for demonstrating the live API endpoint.
     cache: 'no-store',
@@ -16,7 +15,7 @@ async function getUsers(): Promise<User[]> {
 
   if (!res.ok) {
     // This will be caught by the nearest Error Boundary
-    throw new Error('Failed to fetch user data');
+    throw new Error(`Failed to fetch user data: ${res.status} ${res.statusText}`);
   }
 
   return res.json();
@@ -38,12 +37,45 @@ export async function GET(request: Request) {
 
 const Page = async () => {
   let users: User[] = [];
+  let errorMessage = '';
+  
   try {
     users = await getUsers();
   } catch (error) {
-    console.error(error);
-    // Render a fallback or error state if the fetch fails
-    return <div className="text-red-500 text-center p-8">Failed to load user data. Is the server running?</div>
+    console.error('Error fetching users:', error);
+    errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    
+    // Render a more informative error state
+    return (
+      <div className="min-h-screen text-gray-200 font-sans p-4 sm:p-6 lg:p-8">
+        <main className="max-w-7xl mx-auto">
+          <header className="text-center mb-12">
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+              Next.js API Server
+            </h1>
+            <p className="mt-4 text-lg text-gray-400 max-w-2xl mx-auto">
+              This Next.js app serves and displays data from a server-side API Route.
+            </p>
+          </header>
+          
+          <div className="bg-red-900/20 border border-red-500/50 rounded-lg p-8 text-center">
+            <h2 className="text-2xl font-bold text-red-400 mb-4">⚠️ API Connection Error</h2>
+            <p className="text-red-300 mb-4">
+              Failed to load user data: <code className="bg-black/40 px-2 py-1 rounded text-sm">{errorMessage}</code>
+            </p>
+            <div className="text-gray-400 text-sm space-y-2">
+              <p><strong>Possible solutions:</strong></p>
+              <ul className="list-disc list-inside space-y-1 text-left max-w-md mx-auto">
+                <li>Make sure the server is running</li>
+                <li>Check if the API endpoint is accessible</li>
+                <li>Verify your deployment configuration</li>
+                <li>Check the browser console for more details</li>
+              </ul>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
   }
   
   const jsonData = JSON.stringify(users, null, 2);
