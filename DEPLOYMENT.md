@@ -39,6 +39,24 @@ After deployment, you can test the API endpoint directly:
 
 This should return the mock user data in JSON format.
 
+### CORS Configuration:
+CORS is configured directly in `next.config.mjs` using Next.js headers configuration:
+
+```javascript
+// Example of fetching from another application:
+fetch('https://your-app-domain.com/api/users')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+```
+
+**Configuration**: 
+- Edit `next.config.mjs` to customize CORS settings
+- The `headers()` function applies CORS headers to all `/api/*` routes
+- No need for custom CORS handling in individual API routes
+
+**Security Note**: Update the `Access-Control-Allow-Origin` value in `next.config.mjs` to restrict access to specific domains in production.
+
 ### Common Issues:
 1. **Build Errors**: Make sure all dependencies are installed with `npm install`
 2. **API Not Working**: Check that the deployment platform supports Node.js serverless functions
