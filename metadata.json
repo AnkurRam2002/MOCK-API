@@ -1,0 +1,5 @@
+{
+  "name": "Mock API Data Viewer",
+  "description": "A React application that displays a sample dataset to simulate a GET API endpoint. This app demonstrates the data that would be served by a real backend API.",
+  "requestFramePermissions": []
+}

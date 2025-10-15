@@ -1,0 +1,8 @@
+import { User } from './types';
+
+export const MOCK_USERS_DATA: User[] = [
+  { id: 1, name: "Alice Johnson", email: "alice.j@example.com", role: "Admin" },
+  { id: 2, name: "Bob Williams", email: "bob.w@example.com", role: "Developer" },
+  { id: 3, name: "Charlie Brown", email: "charlie.b@example.com", role: "Designer" },
+  { id: 4, name: "Diana Prince", email: "diana.p@example.com", role: "Manager" }
+];
